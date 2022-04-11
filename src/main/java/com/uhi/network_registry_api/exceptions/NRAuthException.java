@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class NRAuthException extends RuntimeException {
-	   
+
+	private static final long serialVersionUID = 1118290718101568227L;
+
 	public NRAuthException(String message) {
-	        super(message);
-	    }
+		super(message);
+	}
 
 }

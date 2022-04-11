@@ -1,15 +1,11 @@
 package com.uhi.network_registry_api.repository;
 
-import java.beans.Statement;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.tree.RowMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,18 +20,18 @@ public class SubscriberRepository implements ISubscriberRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberRepository.class);
 
-	private static String SQL_CREATE_TEXT = "INSERT INTO public.nr_subscribers(\n"
+	private static String SQL_CREATE_TEXT = "INSERT INTO public.subscribers(\n"
 			+ "	subscriber_id, country, city, domain, unique_key_id, pub_key_id, signing_public_key, encr_public_key, valid_from, valid_to, status, created, updated, radius, type, url)\n"
 			+ "	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 	private static String SQL_SEARCH_TEXT = "SELECT participant_id, subscriber_id, country, city, domain, unique_key_id, pub_key_id, signing_public_key, encr_public_key, valid_from, valid_to, status, created, updated, radius, type, url\n"
-			+ "	FROM public.nr_subscribers WHERE subscriber_id = ?;";
+			+ "	FROM public.subscribers WHERE subscriber_id = ?;";
 
 	private static String SQL_LOOKUP_TEXT_BPP = "SELECT subscriber_id, country, city, domain, unique_key_id, pub_key_id, signing_public_key, encr_public_key, valid_from, valid_to, status, created, updated, radius, type, url\n"
-			+ "	FROM subscribers WHERE status = 'SUBSCRIBED' and type = 'BPP';";
+			+ "	FROM public.subscribers WHERE status = 'SUBSCRIBED' and type = 'BPP';";
 
 	private static String SQL_LOOKUP_TEXT_BAP = "SELECT subscriber_id, country, city, domain, unique_key_id, pub_key_id, signing_public_key, encr_public_key, valid_from, valid_to, status, created, updated, radius, type, url\n"
-			+ "	FROM subscribers WHERE status = 'SUBSCRIBED' and type = 'BAP' and country = ? and city = ? and domain = ? and subscriber_id = ?;";
+			+ "	FROM public.subscribers WHERE status = 'SUBSCRIBED' and type = 'BAP' and country = ? and city = ? and domain = ? and subscriber_id = ?;";
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -99,8 +95,8 @@ public class SubscriberRepository implements ISubscriberRepository {
 
 	@Override
 	public Integer addSubscriber(String subscriber_id, String country, String city, String domain, String unique_key_id,
-			String pub_key_id, String signing_public_key, String encr_public_key, String valid_from, String valid_to,
-			String status, String created, String updated, String radius, String sub_type, String url) {
+			String pub_key_id, String signing_public_key, String encr_public_key,
+			String status, String radius, String sub_type, String url) {
 		// TODO Auto-generated method stub
 
 		KeyHolder keyholder = new GeneratedKeyHolder();
@@ -110,22 +106,22 @@ public class SubscriberRepository implements ISubscriberRepository {
 			jdbcTemplate.update(connection -> {
 				PreparedStatement ps = connection.prepareStatement(SQL_CREATE_TEXT,
 						java.sql.Statement.RETURN_GENERATED_KEYS);
-				ps.setString(0, subscriber_id);
-				ps.setString(1, country);
-				ps.setString(2, city);
-				ps.setString(3, domain);
-				ps.setString(4, unique_key_id);
-				ps.setString(5, pub_key_id);
-				ps.setString(6, signing_public_key);
-				ps.setString(7, encr_public_key);
-				ps.setString(8, valid_from);
-				ps.setString(9, valid_to);
-				ps.setString(10, status);
-				ps.setString(11, LocalDate.now().toString());
+				ps.setString(1, subscriber_id);
+				ps.setString(2, country);
+				ps.setString(3, city);
+				ps.setString(4, domain);
+				ps.setString(5, unique_key_id);
+				ps.setString(6, pub_key_id);
+				ps.setString(7, signing_public_key);
+				ps.setString(8, encr_public_key);
+				ps.setString(9, LocalDate.now().toString());
+				ps.setString(10, LocalDate.now().plusYears(1).toString());
+				ps.setString(11, status);
 				ps.setString(12, LocalDate.now().toString());
-				ps.setString(13, radius);
-				ps.setString(14, sub_type);
-				ps.setString(15, url);
+				ps.setString(13, LocalDate.now().toString());
+				ps.setString(14, radius);
+				ps.setString(15, sub_type);
+				ps.setString(16, url);
 
 				return ps;
 
@@ -136,7 +132,7 @@ public class SubscriberRepository implements ISubscriberRepository {
 			throw new NRAuthException("Error adding subscriber" + ex.getMessage());
 		}
 
-		return (Integer) keyholder.getKeys().get("participant_id");
+		return null;
 	}
 
 	@Override

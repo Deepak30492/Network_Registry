@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	@PostMapping("/")
-	public String registerUser(@RequestBody Map<String, Object> userMap)
-	{
-		
-			String firstName = (String) userMap.get("firstName");
-	        String lastName = (String) userMap.get("lastName");
-	        String email = (String) userMap.get("email");
-	        String password = (String) userMap.get("password");
-	        return firstName + " " + lastName;
-	        //User user = userService.registerUser(firstName, lastName, email, password);
-	        //return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+	public String registerUser(@RequestBody Map<String, Object> userMap) {
+
+		String firstName = (String) userMap.get("firstName");
+		String lastName = (String) userMap.get("lastName");
+		String email = (String) userMap.get("email");
+		String password = (String) userMap.get("password");
+		return firstName + " " + lastName;
+		// User user = userService.registerUser(firstName, lastName, email, password);
+		// return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 	}
-	
+
 }

@@ -11,7 +11,6 @@ import com.uhi.network_registry_api.models.Subscriber;
 import com.uhi.network_registry_api.repository.SubscriberRepository;
 
 @Service
-@Transactional
 public class SubscriberService implements ISubscriberService {
 
 	@Autowired
@@ -25,8 +24,9 @@ public class SubscriberService implements ISubscriberService {
 	}
 
 	@Override
-	public Subscriber addSubscriber(String city, String encr_public_key, String pub_key_id, String signing_public_key,
-			String subscriber_id, String unique_key_id, String sub_type, String url) throws NRAuthException {
+	public Subscriber addSubscriber(String subscriber_id, String country, String city, String domain,
+			String unique_key_id, String pub_key_id, String signing_public_key, String encr_public_key, String status,
+			String radius, String sub_type, String url) throws NRAuthException {
 
 		if (subscriber_id != null) {
 			Subscriber s = subscriberRepository.findSubscriber(subscriber_id);
@@ -34,10 +34,9 @@ public class SubscriberService implements ISubscriberService {
 				throw new NRAuthException("Subscriber ID already exists");
 			}
 
-			Integer participant_id = subscriberRepository.addSubscriber(subscriber_id, url, city, url, unique_key_id,
-					pub_key_id, signing_public_key, encr_public_key, city, encr_public_key, pub_key_id,
-					signing_public_key, subscriber_id, unique_key_id, sub_type, url);
-			return subscriberRepository.findSubscriberByParticipantid(participant_id);
+			Integer participant_id = subscriberRepository.addSubscriber(subscriber_id, country, city, domain,
+					unique_key_id, pub_key_id, signing_public_key, encr_public_key, status, radius,
+					sub_type, url);
 
 		}
 
